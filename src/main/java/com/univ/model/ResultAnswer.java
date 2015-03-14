@@ -5,6 +5,7 @@ package com.univ.model;
  */
 public class ResultAnswer {
     private Long questionId;
+    private Long subjectId;
     private Long answerId;
 
     public Long getAnswerId() {
@@ -23,4 +24,13 @@ public class ResultAnswer {
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
+
 }
