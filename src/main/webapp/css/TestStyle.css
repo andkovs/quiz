@@ -1,0 +1,31 @@
+/*#loginDiv{*/
+    /*display: none;*/
+/*}*/
+
+#processTestDiv {
+    display: none;
+}
+
+#chooseTestDiv {
+    display: none;
+}
+
+#login{
+    display: none;
+}
+
+#choose{
+    display: none;
+}
+
+#prev{
+    display: none;
+}
+
+#next{
+    display: none;
+}
+
+#send{
+    display: none;
+}
