@@ -33,6 +33,7 @@ $(function(){
             user = firstNameInput.val() + " " + lastNameInput.val();
             loginBlock.hide(0);
             topicsBlock.show(0);
+            getSubjects(createSubjectsList)
         }
     });
 
@@ -87,7 +88,7 @@ $(function(){
     });
     topicsList.on('click', '.chooseTest', function(){
         var testId = $(this).data('test');
-        getTest(testId);
+        getQuestions(testId, createQuestionsQuiz);
     });
 
     // test
@@ -171,3 +172,35 @@ function getTest(id){
 function switchQuestion(step){
 
 };
+
+
+function getSubjects(callback){
+    $.ajax({
+        type: "GET",
+        url: "rest/test/subjects",
+        success: function(data){
+            callback(data)
+        }
+    })
+}
+
+function createSubjectsList(data){
+    //todo: parse data and show
+    alert(data)
+}
+
+function getQuestions(id, callback){
+    $.ajax({
+        type: "GET",
+        url: "rest/test/questions" + id,
+        success: function(data){
+            callback(data)
+        }
+    })
+}
+
+function createQuestionsQuiz(data){
+    //todo: parse data and show
+    alert(data)
+}
+
