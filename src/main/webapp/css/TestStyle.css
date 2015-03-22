@@ -1,31 +1,6 @@
-/*#loginDiv{*/
-    /*display: none;*/
-/*}*/
-
-#processTestDiv {
+.question {
     display: none;
 }
-
-#chooseTestDiv {
-    display: none;
-}
-
-#login{
-    display: none;
-}
-
-#choose{
-    display: none;
-}
-
-#prev{
-    display: none;
-}
-
-#next{
-    display: none;
-}
-
-#send{
-    display: none;
+.question.active {
+    display: block;
 }
