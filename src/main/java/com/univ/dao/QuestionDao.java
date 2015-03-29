@@ -12,7 +12,7 @@ public class QuestionDao {
         // todo: asap load real data
         // dummy data
         Question[] questions = new Question[0];
-        if(subjectId == 2) {
+        if(subjectId == 1) {
             questions = new Question[2];
             questions[0] = new Question();
             questions[0].setId(1l);

@@ -1,12 +1,5 @@
 package example;
 
-//import com.sun.jersey.api.container.httpserver.HttpServerFactory;
-//import com.sun.net.httpserver.HttpServer;
-//import com.sun.jersey.api.container.httwpserver.HttpServerFactory;
-import com.sun.jersey.api.json.JSONMarshaller;
-import com.sun.jersey.core.header.MediaTypes;
-import org.json.JSONObject;
-
 import java.io.IOException;
 
 import javax.ws.rs.*;
@@ -54,7 +47,7 @@ public class HelloWorld {
     @Produces("application/json")
     @Path("/testJson")
     @Consumes("application/json")
-    public Response getTestPostJson(Rating rating) {
+    public Response getTestPostJson(Rating[] rating) {
         // Return some cliched textual content
         System.out.println(rating);
         return Response.status(200).entity(rating).build();
