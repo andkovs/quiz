@@ -3,6 +3,7 @@ package com.univ.service;
 import com.univ.dao.QuestionDao;
 import com.univ.dao.SubjectDao;
 import com.univ.model.Question;
+import com.univ.model.Result;
 import com.univ.model.Subject;
 import example.Rating;
 
@@ -55,13 +56,13 @@ public class ServiceTest {
 
     @POST
     // The Java method will produce content identified by the MIME Media type "text/plain"
-    @Produces("application/json")
-    @Path("/testJson")
+//    @Produces("application/json")
+    @Path("/answers")
     @Consumes("application/json")
-    public Response getTestPostJson(Rating rating) {
+    public Response receiveResults(Result result) {
         // Return some cliched textual content
-        System.out.println(rating);
-        return Response.status(200).entity(rating).build();
+        System.out.println(result);
+        return Response.status(200).entity("Success").build();
 //        return "asd";
     }
 
