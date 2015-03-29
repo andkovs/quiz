@@ -26,12 +26,12 @@ public class SubjectDao {
 
         Subject[] subjectsChild = new Subject[2];
         subjectsChild[0] = new Subject();
-        subjectsChild[0].setId(4);
+        subjectsChild[0].setId(1);
         subjectsChild[0].setName("History");
 
 
         subjectsChild[1] = new Subject();
-        subjectsChild[1].setId(5);
+        subjectsChild[1].setId(2);
         subjectsChild[1].setName("English");
         subjects[2].setChildSubject(subjectsChild);
 

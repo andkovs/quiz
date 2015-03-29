@@ -1,5 +1,5 @@
 // objects
-var user;
+
 var topicsJson;
 var testJson;
 // login
@@ -18,9 +18,13 @@ var questions;
 var nextBtn;
 var prevBtn;
 var sendBtn;
+
+
 // result
 var resultBlock;
-
+var userName;
+var userSurname;
+var subjectId;
 var answers = [];
 
 $(function(){
@@ -32,65 +36,20 @@ $(function(){
     startBtn = $('#start');
     startBtn.on('click', function(){
         if (firstNameInput.val() != "" && lastNameInput.val() != "") {
-            user = firstNameInput.val() + " " + lastNameInput.val();
+            userName = firstNameInput.val();
+            userSurname = lastNameInput.val();
+            getSubjects(createSubjectsList);
             loginBlock.hide(0);
             topicsBlock.show(0);
-            getSubjects(createSubjectsList)
         }
     });
 
     // topics
-    topicsJson = [
-        {
-            "id": "1",
-            "name": "Topic 1",
-            "tests": [
-                { "id": 1, "name": "test 1" },
-                { "id": 2, "name": "test 2" },
-                { "id": 3, "name": "test 3" }
-            ]
-        },
-        {
-            "id": "2",
-            "name": "Topic 2",
-            "tests": [
-                { "id": 4, "name": "test 4" },
-                { "id": 5, "name": "test 5" },
-                { "id": 6, "name": "test 6" }
-            ]
-        },
-        {
-            "id": "3",
-            "name": "Topic 3",
-            "tests": [
-                { "id": 7, "name": "test 7" },
-                { "id": 8, "name": "test 8" },
-                { "id": 9, "name": "test 9" }
-            ]
-        },
-        {
-            "id": "4",
-            "name": "Topic 4",
-            "tests": [
-                { "id": 10, "name": "test 10" },
-                { "id": 11, "name": "test 11" },
-                { "id": 12, "name": "test 12" }
-            ]
-        }
-    ];
     topicsBlock = $('#topicsBlock');
     topicsList = $('#topicsList');
-    $.each(topicsJson, function(index, elem){
-        var topicHtml = "<li>" + elem.name + "<ul>";
-        $.each(elem.tests, function(index, elem){
-            topicHtml += '<li class="chooseTest" data-test="' + elem.id +'">' + elem.name +'</li>'
-        })
-        topicHtml += "<ul></li>";
-        topicsList.append(topicHtml);
-    });
     topicsList.on('click', '.chooseTest', function(){
-        var testId = $(this).data('test');
-        getQuestions(testId, createQuestionsQuiz);
+        subjectId = $(this).data('test');
+        getQuestions(subjectId, createQuestionsQuiz);
     });
 
     // test
@@ -171,6 +130,8 @@ function getTest(id){
     };
     testTitle.text(testJson.name);
     // test html
+    topicsBlock.hide(0);
+    testBlock.show(0);
 };
 
 function switchQuestion(step){
@@ -190,7 +151,17 @@ function getSubjects(callback){
 
 function createSubjectsList(data){
     //todo: parse data and show
-    alert(data)
+    console.log(data);
+    $.each(data, function(index, elem){
+        var topicHtml = '<div class="panel-heading">' + elem.name + '</divl><div class="panel-body"><ul>';
+        if (elem.childSubject != null) {
+            $.each(elem.childSubject, function(index, elem){
+                topicHtml += '<li class="chooseTest" data-test="' + elem.id +'">' + elem.name +'</li>'
+            });
+        }
+        topicHtml += "</ul></div>";
+        topicsList.append(topicHtml);
+    });
 }
 
 function getQuestions(id, callback){
@@ -205,9 +176,9 @@ function getQuestions(id, callback){
 
 function sendResult(){
     var result = JSON.stringify({
-        subjectId: "12345",
-        name: user,
-        surname: user,
+        subjectId: subjectId,
+        name: userName,
+        surname: userSurname,
         answers: answers
     });
     $.ajax({
@@ -226,7 +197,7 @@ function sendResult(){
 
 function readAnswer (data, index) {
     var answId = $('input[name="answer"]:checked').val();
-    answers[index] = {subjectId: 1234, answerId : answId, questionId : data[index].id};
+    answers[index] = {subjectId: subjectId, answerId : answId, questionId : data[index].id};
 
 }
 function findAnswers(id) {
