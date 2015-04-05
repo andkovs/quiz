@@ -66,15 +66,11 @@ $(function(){
     });
     sendBtn = $('#send');
     sendBtn.on('click', function(){
-        // get test result
-    });
+        sendResult();
+    })
 
     // result
     resultBlock = $('#resultBlock');
-
-    sendBtn.on('click', function(){
-        sendResult();
-    })
 });
 
 function getTest(id){
