@@ -9,7 +9,23 @@ public class Subject {
 
     private String name;
     private Long id;
-    private Subject[] childSubject;
+    private ChildSubject[] childSubject;
+
+    public ChildSubject[] getChildSubject() {
+        return childSubject;
+    }
+
+    public void setChildSubject(ChildSubject[] childSubject) {
+        this.childSubject = childSubject;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -19,19 +35,7 @@ public class Subject {
         this.name = name;
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
-    public Subject[] getChildSubject() {
-        return childSubject;
-    }
 
-    public void setChildSubject(Subject[] childSubject) {
-        this.childSubject = childSubject;
-    }
 }

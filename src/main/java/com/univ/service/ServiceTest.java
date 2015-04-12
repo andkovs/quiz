@@ -1,10 +1,12 @@
 package com.univ.service;
 
 import com.univ.dao.QuestionDao;
+import com.univ.dao.ResultDao;
 import com.univ.dao.SubjectDao;
 import com.univ.model.Question;
 import com.univ.model.Result;
 import com.univ.model.Subject;
+import com.univ.model.TestResponse;
 import example.Rating;
 
 import javax.ws.rs.*;
@@ -55,16 +57,32 @@ public class ServiceTest {
     }
 
     @POST
-    // The Java method will produce content identified by the MIME Media type "text/plain"
-//    @Produces("application/json")
+    @Produces("application/json")
     @Path("/answers")
     @Consumes("application/json")
-    public Response receiveResults(Result result) {
+    public TestResponse receiveResults(Result result) {
         // Return some cliched textual content
-        System.out.println(result);
-        return Response.status(200).entity("Success").build();
+        //System.out.println(result);
+        ResultDao qwe = new ResultDao();
+        TestResponse resp = qwe.resultHandler(result);
+        return resp;
 //        return "asd";
     }
+
+    @POST
+    // The Java method will produce content identified by the MIME Media type "text/plain"
+    @Produces("application/json")
+    @Path("/testresult")
+    @Consumes("application/json")
+    public Integer[] receiveResults(Integer[] result) {
+        // Return some cliched textual content
+        //System.out.println(result);
+//        ResultDao qwe = new ResultDao();
+//        TestResponse resp = qwe.resultHandler(result);
+        return new Integer[]{2, 4, 5, 6};
+//        return "asd";
+    }
+
 
 
     public static void main(String[] args) throws IOException {

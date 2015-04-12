@@ -3,10 +3,16 @@ package com.univ.dao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.univ.model.Answer;
+import com.univ.model.ChildSubject;
 import com.univ.model.Question;
+import com.univ.model.Subject;
+import com.univ.model.QuestionsFrom;
+
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -14,105 +20,91 @@ import java.util.Random;
  */
 public class QuestionDao {
 
-    public Question[] loadQuestionBySubjectId(Long subjectId){
+    public static final int MAX_QUESTIONS_SIZE = 10;
+
+    public Question[] loadQuestionBySubjectId(Long subjectId) {
         // todo: asap load real data
         // dummy data
-//        Question[] questions = new Question[0];
-//        if(subjectId == 1) {
-//            questions = new Question[2];
-//            questions[0] = new Question();
-//            questions[0].setId(1l);
-//            questions[0].setSubjectId(2l);
-//            questions[0].setQuestion("How match is the Fish?");
-//
-//            Answer[] answers = new Answer[2];
-//            answers[0] = new Answer();
-//            answers[0].setSubjectId(2l);
-//            answers[0].setAnswerId(1l);
-//            answers[0].setQuestionId(1l);
-//            answers[0].setAnswer("5$");
-//
-//            answers[1] = new Answer();
-//            answers[1].setSubjectId(2l);
-//            answers[1].setAnswerId(2l);
-//            answers[1].setQuestionId(1l);
-//            answers[1].setAnswer("10$");
-//            questions[0].setAnswer(answers);
-//            questions[1] = new Question();
-//            questions[1].setId(2l);
-//            questions[1].setSubjectId(2l);
-//            questions[1].setQuestion("How match is the Pig?");
-//
-//            answers = new Answer[2];
-//            answers[0] = new Answer();
-//            answers[0].setSubjectId(2l);
-//            answers[0].setAnswerId(1l);
-//            answers[0].setQuestionId(2l);
-//            answers[0].setAnswer("100$");
-//
-//            answers[1] = new Answer();
-//            answers[1].setSubjectId(2l);
-//            answers[1].setAnswerId(2l);
-//            answers[1].setQuestionId(1l);
-//            answers[1].setAnswer("200$");
-//            questions[1].setAnswer(answers);
-//        }
-//
-//
-//
-//
-//        return questions;
+        Gson gson = new GsonBuilder().create();
+        Question[] allQuestions = gson.fromJson(readJson("questions.js").toString(), Question[].class);
+        Subject[] allSubjects = gson.fromJson(readJson("subjects.js").toString(), Subject[].class);
 
-        BufferedReader inQestion;
-        String s;
-        StringBuffer s2;
-        //Question[] questions = new Question[0];
-        Question[] allQuestions = new Question[0];
+        HashMap<Long, ArrayList<Question>>  questionsBySubIdMap = createQuestionMapBySubjectId(allQuestions);
+        ChildSubject currentChildSubject = getMainTest(subjectId, allSubjects);
 
-        try {
-            // read from Json
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("/database/questions.js");
-            inQestion = new BufferedReader(new InputStreamReader(resourceAsStream, "UTF8"));
-            s2 = new StringBuffer();
-            while ((s = inQestion.readLine()) != null) {
-                s2.append(s + "\n") ;
-            }
-            inQestion.close();
-            //write from Json into object (subject)
+        ArrayList[] questionsListArray = new ArrayList[currentChildSubject.getQuestionsFrom().length];
 
-            Gson gson = new GsonBuilder().create();
-            allQuestions = gson.fromJson(s2.toString(), Question[].class);
-
-
-        } catch(FileNotFoundException ex) {
-            System.out.println(ex);
-        } catch (IOException ex){
-            System.out.println(ex);
-        }
-
-        ArrayList<Question> tmpSubjectList = new ArrayList<Question>();
-        for (int i = 0; i < allQuestions.length; i++) {
-            if(subjectId == allQuestions[i].getSubjectId()){
-                tmpSubjectList.add(allQuestions[i]);
+        ArrayList<Question> resultQuestions = new ArrayList<Question>();
+        Random random = new Random();
+        for (int i = 0; i < questionsListArray.length; i++){
+            QuestionsFrom questionsFrom = currentChildSubject.getQuestionsFrom()[i];
+            Integer questionSize = questionsFrom.getAmount();
+            Long currentSubjectId = questionsFrom.getQuestionListId();
+            List<Question> currentQuestionList = questionsBySubIdMap.get(currentSubjectId);
+            if(currentQuestionList != null){
+                int currentQuestionsListSize = currentQuestionList.size();
+                if(questionSize <= currentQuestionsListSize){
+                    for (int j = 0; j < questionSize; j++) {
+                        int question = random.nextInt(currentQuestionsListSize - 1);
+                        resultQuestions.add(currentQuestionList.get(question));
+                        currentQuestionList.remove(question);
+                    }
+                } else {
+                    //todo: handle this
+                }
             }
         }
 
-        ArrayList<Question> finalQuestionList = new ArrayList<Question>();
-        Random rand = new Random();
-        int r;
-        for (int i = 0; i < 3; i++) {
-            r = rand.nextInt(tmpSubjectList.size());
-            finalQuestionList.add(tmpSubjectList.get(r));
-            tmpSubjectList.remove(r);
-        }
-
-        Question[] questions = new Question[finalQuestionList.size()];
-        questions = finalQuestionList.toArray(questions);
-
-
-
-
-        return questions;
+        return resultQuestions.toArray(new Question[resultQuestions.size()]);
 
     }
+
+    private HashMap<Long, ArrayList<Question>> createQuestionMapBySubjectId(Question[] allQuestions) {
+        HashMap<Long, ArrayList<Question>> hashMap = new HashMap<Long, ArrayList<Question>>();
+        for (Question question : allQuestions) {
+            if(!hashMap.containsKey(question.getSubjectId())){
+                hashMap.put(question.getSubjectId(), new ArrayList<Question>());
+            }
+            hashMap.get(question.getSubjectId()).add(question);
+        }
+        return hashMap;
+    }
+
+    private ChildSubject getMainTest(Long subjectId, Subject[] allSubjects) {
+        ChildSubject currentChildSubject = null;
+        for(Subject sub : allSubjects){
+            for(ChildSubject chSub : sub.getChildSubject()) {
+                if (chSub.getChildSubjectId().equals(subjectId)){
+                    currentChildSubject = chSub;
+                }
+            }
+        }
+        return currentChildSubject;
+    }
+
+
+    private StringBuffer readJson(String dir) {
+        BufferedReader in;
+        String s;
+        StringBuffer s2=null;
+        try {
+            // read from Json
+            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("/database/"+dir);
+            in = new BufferedReader(new InputStreamReader(resourceAsStream, "UTF8"));
+            s2 = new StringBuffer();
+            while ((s = in.readLine()) != null) {
+                s2.append(s + "\n");
+            }
+            in.close();
+            return s2;
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+
+        return s2;
+
+    }
+
 }

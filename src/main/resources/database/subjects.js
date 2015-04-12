@@ -1,88 +1,58 @@
 [
     {
-        "name": "Охрана труда",
+        "name": "Электробезопасность",
         "id": 1,
         "childSubject":
             [
                 {
-                    "name": "Охрана труда",
-                    "id": 101,
-                    "childSubject":[]
+                    "childSubjectId": 110,
+                    "childSubjectName": "2 группа",
+                    "questionsFrom":
+                        [
+                            {
+                                "questionListId": 111,
+                                "amount": 2
+                            },
+                            {
+                                "questionListId": 112,
+                                "amount": 2
+                            },
+                            {
+                                "questionListId": 113,
+                                "amount": 2
+                            },
+                            {
+                                "questionListId": 114,
+                                "amount": 2
+                            },
+                            {
+                                "questionListId": 115,
+                                "amount": 1
+                            },
+                            {
+                                "questionListId": 116,
+                                "amount": 1
+                            }
+
+                        ]
                 },
                 {
-                    "name": "Верхолазные работы и работы на высоте",
-                    "id": 102,
-                    "childSubject":[]
-                }
-            ]
-    },
-    {
-        "name": "Пожарная безопасность",
-        "id": 2,
-        "childSubject":[]
-    },
-    {
-        "name": "ГО и ЧС",
-        "id": 3,
-        "childSubject":[]
-    },
-    {
-        "name": "Электробезопасность",
-        "id": 4,
-        "childSubject":
-            [
-                {
-                    "name": "ПТЭЭП",
-                    "id": 401,
-                    "childSubject":[]
+                    "childSubjectId": 120,
+                    "childSubjectName": "3 группа",
+                    "questionsFrom":[]
                 },
                 {
-                    "name": "ПУЭ",
-                    "id": 402,
-                    "childSubject":[]
+                    "childSubjectId": 130,
+                    "childSubjectName": "4 группа",
+                    "questionsFrom":[]
                 },
                 {
-                    "name": "Приказ Минтруда 328н",
-                    "id": 403,
-                    "childSubject":[]
-                },
-                {
-                    "name": "Пожарка",
-                    "id": 404,
-                    "childSubject":[]
-                },
-                {
-                    "name": "ИП и СИЗ",
-                    "id": 405,
-                    "childSubject":[]
-                },
-                {
-                    "name": "Медицина",
-                    "id": 406,
-                    "childSubject":[]
-                }
-            ]
-    },
-    {
-        "name": "Рабочие проофессии",
-        "id": 5,
-        "childSubject":
-            [
-                {
-                    "name": "Стропальщик",
-                    "id": 501,
-                    "childSubject":[]
-                },
-                {
-                    "name": "Рабочий люльки",
-                    "id": 502,
-                    "childSubject":[]
-                },
-                {
-                    "name": "Монтажник по монтажу стальных и железобетонных конструкций",
-                    "id": 503,
-                    "childSubject":[]
+                    "childSubjectId": 140,
+                    "childSubjectName": "5 группа",
+                    "questionsFrom":[]
                 }
             ]
     }
 ]
+
+
