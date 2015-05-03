@@ -1,6 +1,8 @@
 // objects
-var topicsJson;
-var testJson;
+var testsJson;
+var currentTestName;
+var currentTestCategoryName;
+var questionsJson;
 var currentQuestionIndex = 0;
 // topics
 var topicsBlock;
@@ -13,15 +15,20 @@ var loginSubmitBtn;
 var loginCancelBtn;
 // test
 var testBlock;
-var testTitle;
+var testTitleLabel;
+var testTimesLabel;
 var testForm;
 var testPaging;
 var sendBtn;
 // result
 var resultBlock;
+var resultName;
+var resultTest;
+var resultCorrect;
+var resultUncorrect;
 var userName;
 var userSurname;
-var subjectId;
+var testId;
 var answers = [];
 
 $(function(){
@@ -30,8 +37,11 @@ $(function(){
     topicsBlock = $('#topicsBlock');
     topicsList = $('#topicsList');
     topicsList.on('click', '.chooseTest', function(){
-        subjectId = $(this).data('test');
-        getQuestions(subjectId);
+        currentTestName = $(this).text();
+        currentTestCategoryName = $(this).parent().prev().text();
+        testTitleLabel.text(currentTestCategoryName + ": " + currentTestName);
+        testId = $(this).data('test');
+        getQuestions(testId);
         topicsBlock.hide(0);
         loginBlock.show(0);
     });
@@ -49,6 +59,7 @@ $(function(){
             userSurname = lastNameInput.val();
             loginBlock.hide(0);
             testBlock.show(0);
+            startTimer();
         }
     });
     loginCancelBtn = $('#loginCancel');
@@ -59,7 +70,8 @@ $(function(){
 
     // test
     testBlock = $('#testBlock');
-    testTitle = testBlock.find('h2');
+    testTitleLabel = $('#testTitle');
+    testTimesLabel = $('#testTime');
     testForm = $('#testForm');
     testPaging = $('#testPaging');
     sendBtn = $('#send');
@@ -69,6 +81,10 @@ $(function(){
 
     // result
     resultBlock = $('#resultBlock');
+    resultName = $('#resultName');
+    resultTest = $('#resultTest');
+    resultCorrect = $('#resultCorrect');
+    resultUncorrect = $('#resultUncorrect');
 });
 
 function getSubjects(){
@@ -76,9 +92,8 @@ function getSubjects(){
         type: "GET",
         url: "rest/test/subjects",
         success: function(data){
-            topicsJson = data;
-            console.log('topics json', topicsJson);
-            $.each(topicsJson, function(index, elem){
+            testsJson = data;
+            $.each(testsJson, function(index, elem){
                 var topicHtml = '<div class="panel panel-primary"><div class="panel-heading">' + elem.name + '</div><ul class="list-group">';
                 if (elem.childSubject != null) {
                     $.each(elem.childSubject, function(index, elem){
@@ -97,53 +112,109 @@ function getQuestions(id){
         type: "GET",
         url: "rest/test/questions/" + id,
         success: function(data){
-            testJson = data;
-            console.log('test json', testJson);
-            testTitle.text(testJson[0].subjectId);
-            $.each(testJson, function(){
+            questionsJson = data;
+            $.each(questionsJson, function(){
                 $('#testQuestionTmpl').tmpl(this).appendTo(testForm);
             });
-            //testPaging.html($('#testPagingTmpl').tmpl(testJson));
-            //switchQuestion(0);
+            switchQuestion(0);
         }
     })
 }
 
+function startTimer() {
+    var time = 15 * 60;
+    testTimesLabel.text(timeText(time));
+    var timeInterval = setInterval(function(){
+        time--;
+        if (time >= 0) {
+            testTimesLabel.text(timeText(time));
+        }
+        else {
+            clearInterval(timeInterval)
+            sendResult();
+        }
+    }, 1000);
+};
+
+function timeText(time) {
+    var seconds = time % 60;
+    var minutes = Math.floor(time/60);
+    var result = "";
+    if (seconds >= 10)
+        result = minutes + ":" + seconds;
+    else
+        result = minutes + ":0" + seconds;
+    return result;
+};
+
 function switchQuestion(index){
-    questionsCount = 10;
+    var questionsCount = questionsJson.length;
+
     if (index == "prev" && currentQuestionIndex > 0) {
         currentQuestionIndex--;
     } else  if (index == "next" && currentQuestionIndex < (questionsCount - 1)) {
         currentQuestionIndex++;
     } else if (typeof index == "number" && index >= 0 && index < questionsCount) {
         currentQuestionIndex = index;
-    } else {
-        currentQuestionIndex = 0;
     }
+
     var formQuestions = testForm.find('fieldset');
     formQuestions.hide(0);
     $(formQuestions[currentQuestionIndex]).show(0);
+    testPaging.find('.btn').removeClass('btn-primary');
+    $(testPaging.find('.btn').not(':first')[currentQuestionIndex]).addClass('btn-primary');
 };
 
 function sendResult() {
     var questionSections = testForm.find('fieldset');
+    var testAnswers = [];
+    questionSections.each(function () {
+        var answerSubjectId = parseInt($(this).data('subject'));
+        var answerQuestionId = parseInt($(this).data('question'));
+        var answerId = 0;
+        var selectedAnswerElem = $(this).find('[type="radio"]:checked');
+        if (selectedAnswerElem.length != 0)
+            answerId = parseInt(selectedAnswerElem.val());
+        var answer = {answerId: answerId, questionId: answerQuestionId, subjectId: answerSubjectId};
+        testAnswers.push(answer);
+    });
+    console.log('testAnswers', testAnswers);
     var dataToSend = JSON.stringify({
-        subjectId: 1,
+        subjectId: testId,
         name: userName,
         surname: userSurname,
-        answers: []
+        answers: testAnswers
     });
+    console.log('dataToSend', dataToSend);
     $.ajax({
         type: "POST",
         url: "rest/test/answers",
         //dataType: "json",
         contentType: "application/json",
-        data: result,
+        data: dataToSend,
         success: function(data){
-            console.log("success data from send result", data)
+            console.log("success data from send result", data);
+            testBlock.hide(0);
+            resultBlock.show(0);
+            resultName.text(userName + " " + userSurname);
+            resultTest.text(currentTestCategoryName + ": " + currentTestName);
+            resultCorrect.text(data.correctAnswers);
+            if (data.questionsWithUncorrectAnswers.length == 0) {
+                resultUncorrect.html("<p>0</p>");
+            } else {
+                var uncorrectList = $(document.createElement("ul"));
+                resultUncorrect.html(uncorrectList);
+                $.each(data.questionsWithUncorrectAnswers, function(index, elem){
+                    var uncorrectAnswer = $(document.createElement("li"));
+                    uncorrectAnswer.html("<b>" + elem.needQuestion + "</b></br />" + elem.answer);
+                    uncorrectList.append(uncorrectAnswer);
+                });
+            }
         },
         error: function(data) {
             console.log("error data form send result ", data);
+            testBlock.hide(0);
+            resultBlock.show(0);
         }
     })
 }

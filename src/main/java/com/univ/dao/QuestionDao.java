@@ -23,8 +23,7 @@ public class QuestionDao {
     public static final int MAX_QUESTIONS_SIZE = 10;
 
     public Question[] loadQuestionBySubjectId(Long subjectId) {
-        // todo: asap load real data
-        // dummy data
+
         Gson gson = new GsonBuilder().create();
         Question[] allQuestions = gson.fromJson(readJson("questions.js").toString(), Question[].class);
         Subject[] allSubjects = gson.fromJson(readJson("subjects.js").toString(), Subject[].class);
@@ -89,8 +88,9 @@ public class QuestionDao {
         StringBuffer s2=null;
         try {
             // read from Json
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("/database/"+dir);
-            in = new BufferedReader(new InputStreamReader(resourceAsStream, "UTF8"));
+            in = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\TestDataBase\\"+dir), "UTF8"));
+            //InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("/database/"+dir);
+            //in = new BufferedReader(new InputStreamReader(resourceAsStream, "UTF8"));
             s2 = new StringBuffer();
             while ((s = in.readLine()) != null) {
                 s2.append(s + "\n");
@@ -102,9 +102,8 @@ public class QuestionDao {
         } catch (IOException ex) {
             System.out.println(ex);
         }
-
         return s2;
-
     }
+
 
 }

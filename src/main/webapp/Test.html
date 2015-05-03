@@ -2,92 +2,150 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/TestStyle.css">
     <script src="js/jquery-2.1.3.js"></script>
     <script src="js/jquery.tmpl.js"></script>
     <script src="js/test.js"></script>
-    <script src="js/moment.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.js"></script>
     <title></title>
 </head>
 <body>
-<div id="content" class="container">
+<div id="content" class="container page-content">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
 
-    <div id="topicsBlock">
-        <h2>Выбирите тест</h2>
-        <div id="topicsList"></div>
-    </div>
 
-    <div id="loginBlock" style="display: none;">
-        <h2>Регистраиця</h2>
-        <div class="form-horizontal">
-            <fieldset>
-                <legend>Введите ваше имя и фамилию</Legend>
-                <div class="form-group">
-                    <label for="firstName" class="col-sm-2 control-label">Имя</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="firstName" placeholder="Имя">
+
+            <div id="topicsBlock">
+                <h2>Выбирите тест</h2>
+                <div id="topicsList"></div>
+            </div>
+
+            <div id="loginBlock" style="display: none;">
+                <h2>Регистраиця</h2>
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>Введите ваше имя и фамилию</Legend>
+                        <div class="form-group">
+                            <label for="firstName" class="col-sm-3 control-label">Имя</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="firstName" placeholder="Имя">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="col-sm-3 control-label">Фамилия</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="lastName" placeholder="Фамилия">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-6">
+                                <button id="loginSubmit" class="btn btn-success">Начать</button>
+                                <button id="loginCancel" class="btn btn-default">Отменить</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div id="testBlock" style="display: none;">
+                <h2 class="row">
+                    <span id="testTitle" class="col-sm-9"></span>
+                    <span id="testTime" class="col-sm-3 text-right"></span>
+                </h2>
+                <form id="testForm" class="form-horizontal">
+                </form>
+
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-9">-->
+                        <!--<ul id="testPaging" class="pagination">-->
+                            <!--<li>-->
+                                <!--<a id="prev" onclick="switchQuestion('prev')" aria-label="Previous">-->
+                                    <!--<span aria-hidden="true">&laquo;</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li><a onclick="switchQuestion(0)">1</a></li>-->
+                            <!--<li><a onclick="switchQuestion(1)">2</a></li>-->
+                            <!--<li><a onclick="switchQuestion(2)">3</a></li>-->
+                            <!--<li><a onclick="switchQuestion(3)">4</a></li>-->
+                            <!--<li><a onclick="switchQuestion(4)">5</a></li>-->
+                            <!--<li><a onclick="switchQuestion(5)">6</a></li>-->
+                            <!--<li><a onclick="switchQuestion(6)">7</a></li>-->
+                            <!--<li><a onclick="switchQuestion(7)">8</a></li>-->
+                            <!--<li><a onclick="switchQuestion(8)">9</a></li>-->
+                            <!--<li><a onclick="switchQuestion(9)">10</a></li>-->
+                            <!--<li>-->
+                                <!--<a id="next" onclick="switchQuestion('next')" aria-label="Next">-->
+                                    <!--<span aria-hidden="true">&raquo;</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <!--<div class="col-sm-3 text-right">-->
+                        <!--<p>-->
+                            <!--<button id="send" class="btn btn-success">Готово</button>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="btn-toolbar">
+                    <div id="testPaging" class="btn-group">
+                        <button class="btn btn-default" onclick="switchQuestion('prev')">&laquo;</button>
+                        <button class="btn btn-default" onclick="switchQuestion(0)">1</button>
+                        <button class="btn btn-default" onclick="switchQuestion(1)">2</button>
+                        <button class="btn btn-default" onclick="switchQuestion(2)">3</button>
+                        <button class="btn btn-default" onclick="switchQuestion(3)">4</button>
+                        <button class="btn btn-default" onclick="switchQuestion(4)">5</button>
+                        <button class="btn btn-default" onclick="switchQuestion(5)">6</button>
+                        <button class="btn btn-default" onclick="switchQuestion(6)">7</button>
+                        <button class="btn btn-default" onclick="switchQuestion(7)">8</button>
+                        <button class="btn btn-default" onclick="switchQuestion(8)">9</button>
+                        <button class="btn btn-default" onclick="switchQuestion(9)">10</button>
+                        <button class="btn btn-default" onclick="switchQuestion('next')">&raquo;</button>
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button id="send" class="btn btn-success">Готово</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="lastName" class="col-sm-2 control-label">Фамилия</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" id="lastName" placeholder="Фамилия">
-                    </div>
-                </div>
-            </fieldset>
+            </div>
+
+            <div id="resultBlock" style="display: none;">
+                <h2>Результат</h2>
+
+                    <h3>ФИО:</h3>
+                    <p id="resultName">...</p>
+                    <h3>Тест:</h3>
+                    <p id="resultTest">...</p>
+                    <h3>Правильных ответов:</h3>
+                    <p id="resultCorrect">...</p>
+                    <h3>Неправильные ответы:</h3>
+                    <div id="resultUncorrect">...</div>
+
+
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="glyphicon glyphicon-print"></i>
+                    Print
+                </button>
+            </div>
+
+
         </div>
-        <button id="loginSubmit" class="btn btn-success">Начать</button>
-        <button id="loginCancel" class="btn btn-default">Отменить</button>
-    </div>
-
-    <div id="testBlock" style="display: none;">
-        <h2 id="testTitle">Process</h2>
-        <form id="testForm" class="form-horizontal">
-        </form>
-
-        <ul id="testPaging" class="pagination">
-        </ul>
-
-        <!--<button class="btn btn-default">prev</button>-->
-        <!--<button class="btn btn-default">next</button>-->
-        <button id="send" class="btn btn-success">Готово</button>
-    </div>
-
-    <div id="resultBlock" style="display: none;">
     </div>
 
 </div>
 
 <script id="testQuestionTmpl" type="text/x-jquery-tmpl">
-    <fieldset data-questionId="${questionId}">
+    <fieldset data-question="${id}" data-subject="${subjectId}" class="question-field">
         <legend>${question}</legend>
         {%each answer%}
             <div class="radio">
                 <label>
-                    <input type="radio" name="${questionId}" value="${answerId}" />
+                    <input type="radio" name="${subjectId}_${questionId}" value="${answerId}" />
                     ${answer}
                 </label>
             </div>
         {%/each%}
     </fieldset>
-</script>
-
-<script id="testPagingTmpl" type="text/x-jquery-tmpl">
-        <li>
-            <a id="prev" onclick="switchQuestion('prev')" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        {%each answer%}
-        <li><a onclick="switchQuestion(${$index})">${$index + 1}</a></li>
-        {%/each%}
-        <li>
-            <a id="next" onclick="switchQuestion('next')" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
 </script>
 
 

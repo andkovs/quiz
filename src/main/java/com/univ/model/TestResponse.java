@@ -8,7 +8,15 @@ public class TestResponse {
     private String name;
     private String surname;
     private int correctAnswers;
-    private int allAnswers;
+    private IncorrectAnswers[] questionsWithUncorrectAnswers;
+
+    public IncorrectAnswers[] getQuestionsWithUncorrectAnswers() {
+        return questionsWithUncorrectAnswers;
+    }
+
+    public void setQuestionsWithUncorrectAnswers(IncorrectAnswers[] questionsWithUncorrectAnswers) {
+        this.questionsWithUncorrectAnswers = questionsWithUncorrectAnswers;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -22,10 +30,6 @@ public class TestResponse {
         this.correctAnswers = correctAnswers;
     }
 
-    public void setAllAnswers(int allAnswers) {
-        this.allAnswers = allAnswers;
-    }
-
     public String getName() {
         return name;
     }
@@ -36,10 +40,6 @@ public class TestResponse {
 
     public int getCorrectAnswers() {
         return correctAnswers;
-    }
-
-    public int getAllAnswers() {
-        return allAnswers;
     }
 
 
